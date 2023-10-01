@@ -11,7 +11,7 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 //PlayerOne and PlayerTwo blueprint
 class Sprite {
-    constructor({ position, velocity, color, offset }) { //übergabe position, velocity
+    constructor({ position, velocity, color, offset }) { //übergabe position, velocity, etc
         this.position = position
         this.velocity = velocity
         this.width = 50
@@ -107,13 +107,53 @@ const PlayerTwo = new Sprite({
 
 })
 
-class HealtBar{
-    constructor ({}){
-        this.width = 200,
-        this.height = 30
-        
+//object Healthbar
+class HealthBar {
+    constructor ({position, color, isMirrored = false}) {
+        this.position = position;
+        this.width = 400;
+        this.height = 30;
+        this.color = color;
+        this.isMirrored = isMirrored; 
+    }
+
+    draw() {
+        c.fillStyle = this.color;
+        c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+
+    update() {
+        this.draw();
+    }
+
+    // verringern der Lebensanzeige
+    decrease(amount) {
+        if (this.isMirrored) {
+            this.width -= amount;
+        } else {
+            this.position.x += amount;
+            this.width -= amount;
+        }
     }
 }
+
+const healthPlayerOne = new HealthBar({
+    position: {
+        x: 50,
+        y: 50
+    },
+    color: 'yellow' 
+});
+
+const healthPlayerTwo = new HealthBar({
+    position: {
+        x: 570,
+        y: 50
+    },
+    color: 'yellow',
+    isMirrored: true  // Gespiegelt für Spieler Zwei
+});
+
 
 
 console.log(PlayerOne);
@@ -138,7 +178,7 @@ const keys = {
 
 //timer Funktion
 
-let timer = 10
+let timer = 11
 
 function decreaseTimer() {
     setTimeout(decreaseTimer, 1000)
@@ -148,11 +188,12 @@ function decreaseTimer() {
     }
     if (timer === 0 && PlayerOne.health === PlayerTwo.health) {
         document.querySelector('#textTie').innerHTML = 'Tie'
-    } else if (timer === 0 || timer > 0 && PlayerOne.health > PlayerTwo.health) {
+    } else if (PlayerTwo.health === 0) {
         document.querySelector('#textTie').innerHTML = 'Player One wins'
         document.querySelector('#timerId').innerHTML = 0
+        
 
-    } else if (timer === 0 || timer > 0 && PlayerOne.health < PlayerTwo.health) {
+    } else if (PlayerOne.health === 0) {
         document.querySelector('#textTie').innerHTML = 'Player Two wins'
         document.querySelector('#timerId').innerHTML = 0
 
@@ -184,6 +225,8 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
     PlayerOne.update()
     PlayerTwo.update()
+    healthPlayerOne.update()
+    healthPlayerTwo.update()
 
     PlayerOne.velocity.x = 0
     //PlayerOne Movement
@@ -211,6 +254,7 @@ function animate() {
     ) {
         PlayerOne.isAttacking = false
         PlayerTwo.health = PlayerTwo.health - 20
+        healthPlayerTwo.decrease(30) // abzug lebensanziege
 
 
         console.log("Attack PlayerOne");
@@ -227,6 +271,7 @@ function animate() {
     ) {
         PlayerTwo.isAttacking = false
         PlayerOne.health = PlayerOne.health - 20
+        healthPlayerOne.decrease(3) // abzug lebensanziege
 
         console.log("Attack PlayerTwo");
         console.log(PlayerOne.health, 'health one');
@@ -234,8 +279,9 @@ function animate() {
     }
 
 }
-animate();
 decreaseTimer();
+animate();
+
 //Eventlistener für alle Keys die gedrückt werden
 window.addEventListener('keydown', (event) => {
     console.log(event.key);
