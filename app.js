@@ -107,6 +107,14 @@ const PlayerTwo = new Sprite({
 
 })
 
+class HealtBar{
+    constructor ({}){
+        this.width = 200,
+        this.height = 30
+        
+    }
+}
+
 
 console.log(PlayerOne);
 
