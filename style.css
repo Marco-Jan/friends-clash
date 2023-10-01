@@ -1,0 +1,49 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+ 
+*{
+    box-sizing: border-box;
+}
+
+.container {
+    position: relative;
+    display: inline-block;
+}
+
+.statsContainer {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    align-items: center;
+    padding: 20px;
+}
+
+.HP_PlayerOne, .HP_PlayerTwo {
+    background-color: yellow;
+    height: 30px;
+    width: 100%;
+}
+
+.timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: red;
+    width: 100px;
+    height: 100px;
+    flex-shrink: 0;
+}
+#textTie{
+    position: absolute;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
